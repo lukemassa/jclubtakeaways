@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block head %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
+{% endblock %}
+{% block pageheader %}
+    <h3 id="header">
+    </h3>
+    {% endblock %}
+
+{% block pagebody %}
+    <form id="takeaway">
+        <div class="form-group">
+            <label for='name'>Name</label>
+            <input type='text' class="form-control" id="inputName" placeholder="Enter name">
+        </div>
+        <div class="form-group">
+            <label for='takeaways'>Takeaways</label>
+            <textarea class="form-control" id="inputName" placeholder=""></textarea>
+            <small class="form-text text-muted">Write a one or two sentence takeaway or interesting facts from this jclub talk.</small>
+        </div>
+          <button id="submittakeway" type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
+<script>
+
+
+$(document).ready(function() {
+    get_row_from_date(last_thursday(), function(row) {
+
+        var html = "Takeaway from " + row["Topic"] +
+        " by " + row["Presenter"] +
+        " on " + row["Date"];
+        $("#header").html(html);
+    });
+    $("#takeaway").submit(function(e) {
+        e.preventDefault();
+        alert("HI");
+    });
+});
+</script>
+{% endblock %}

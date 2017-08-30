@@ -11,9 +11,7 @@
 <!--<link rel="stylesheet" href="///Users/luke/jclubtakeaways/docs/css/css.js"></script>-->
 
 <title>JClub Thoughts</title>
-    
-<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
-
+    {% block head %}{% endblock %}
 
 </head>
 <body>
@@ -44,48 +42,15 @@
 <body>
     <div class="container">
       <div class="page-header">
-     
-    <h3 id="header">
-    </h3>
-    
+     {% block pageheader %}
+     {% endblock %}
       </div><!-- page-header -->
 
-     
-    <form id="takeaway">
-        <div class="form-group">
-            <label for='name'>Name</label>
-            <input type='text' class="form-control" id="inputName" placeholder="Enter name">
-        </div>
-        <div class="form-group">
-            <label for='takeaways'>Takeaways</label>
-            <textarea class="form-control" id="inputName" placeholder=""></textarea>
-            <small class="form-text text-muted">Write a one or two sentence takeaway or interesting facts from this jclub talk.</small>
-        </div>
-          <button id="submittakeway" type="submit" class="btn btn-primary">Submit</button>
-    </form>
-
-<script>
-
-
-$(document).ready(function() {
-    get_row_from_date(last_thursday(), function(row) {
-
-        var html = "Takeaway from " + row["Topic"] +
-        " by " + row["Presenter"] +
-        " on " + row["Date"];
-        $("#header").html(html);
-    });
-    $("#takeaway").submit(function(e) {
-        e.preventDefault();
-        alert("HI");
-    });
-});
-</script>
-
+     {% block pagebody %}{% endblock %}
     </div> <!-- container -->
 
 
-     
+     {% block pagefooter %}{% endblock %}
      <table id="placeholder" style="display: none;"></table>
       </body>
     </html>
