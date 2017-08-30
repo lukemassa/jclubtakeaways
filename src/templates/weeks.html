@@ -16,12 +16,6 @@
 <script>
 $(document).ready(function() {
     
-    $("#weeks").on("click",".date",function(e) {
-        e.preventDefault();
-        var date = parse_date_href($(this).attr("href"));
-        alert(date);
-    });
-
     $('#weeks').sheetrock({
         url:jclubsheet ,
         query: "select A,B,C order by A asc",
@@ -30,7 +24,7 @@ $(document).ready(function() {
                 return "";
             var data = e.cellsArray;
             var date = data[0];
-            var datehtml = "<a class='date' href='" + get_date_href(date) + "'>" + date + "</a>";
+            var datehtml = "<a class='date' href=/oneweek.html#" + date + ">" + date + "</a>";
             var presenter = data[1];
             var topic = data[2];
             return "<tr>" +

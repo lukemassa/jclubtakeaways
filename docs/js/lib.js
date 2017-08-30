@@ -1,5 +1,6 @@
 
 var jclubsheet = 'https://docs.google.com/spreadsheets/d/1M38X99dQ_rLCaE6mqX9ct2DF-YO6ySAfd3f1_xwerYs/edit#gid=0';
+var jclubtakeaways = 'https://docs.google.com/spreadsheets/d/1MpfQ3BaInYKHI6ebIJEYml1xgfAM0rr5ymmDi6xs8aw/edit#gid=0';
 
 function get_date_href(date) {
     return "#" + date.replace(/\//g,"-");
@@ -30,11 +31,22 @@ function get_row_from_date(date, callback) {
       }
    });
 }
-function last_thursday() {
+function format_date(date) {
+    return (date.getMonth() + 1) + "/" + date.getDate() + "/" + (date.getYear() + 1900);
+}
+function get_last_thursday() {
     var now = new Date();
-    var daysAfterLastThursday = (-7 + 4) - now.getDay(); // 7 = number of days in week, 4 = the thursdayIndex (0= sunday)
+    var day = now.getDay();
+
+    var daysAfterLastThursday;
+    if (day < 4)
+        daysAfterLastThursday = -3 - day;
+    else if (day > 4)
+        daysAfterLastThursday = 4 - day;
+    else 
+        daysAfterLastThursday = 0;
+
     var currentMs = now.getTime();
     var lastThursday = new Date(currentMs + (daysAfterLastThursday * 24 * 60 * 60 * 1000));
-    var lastThursdayFormatted = (lastThursday.getMonth() + 1) + "/" + lastThursday.getDate() + "/" + (lastThursday.getYear() + 1900);
-    return lastThursdayFormatted;
+    return format_date(lastThursday);
 }

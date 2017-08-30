@@ -58,7 +58,7 @@
         </div>
         <div class="form-group">
             <label for='takeaways'>Takeaways</label>
-            <textarea class="form-control" id="inputName" placeholder=""></textarea>
+            <textarea class="form-control" id="inputName" placeholder="Takeaway"></textarea>
             <small class="form-text text-muted">Write a one or two sentence takeaway or interesting facts from this jclub talk.</small>
         </div>
           <button id="submittakeway" type="submit" class="btn btn-primary">Submit</button>
@@ -68,16 +68,24 @@
 
 
 $(document).ready(function() {
-    get_row_from_date(last_thursday(), function(row) {
+    var last_thursday = get_last_thursday();
+    get_row_from_date(last_thursday, function(row) {
 
-        var html = "Takeaway from " + row["Topic"] +
-        " by " + row["Presenter"] +
-        " on " + row["Date"];
+        if (row["Presenter"]) {
+            var html = "Your takeaway from " + row["Topic"] +
+            " by " + row["Presenter"] +
+            " on " + row["Date"];
+        }
+        else {
+            html = "No Journal Club on " + row["Date"] +
+            " because of " + row["Topic"];
+            $("#takeaway").remove();
+        }
         $("#header").html(html);
     });
     $("#takeaway").submit(function(e) {
         e.preventDefault();
-        alert("HI");
+        window.location.href = "/oneweek.html#" + last_thursday;
     });
 });
 </script>
