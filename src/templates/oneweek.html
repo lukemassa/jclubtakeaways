@@ -39,7 +39,7 @@ $(document).ready(function() {
     });
     $('#oneweek').sheetrock({
         url:jclubtakeaways ,
-        query: 'select A,B',
+        query: 'select B,C',
         rowTemplate: function(e) {
             console.log(e);
             if (JSON.stringify(e.cellsArray)==JSON.stringify(e.labels))
