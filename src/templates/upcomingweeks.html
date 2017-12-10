@@ -23,18 +23,14 @@ $(document).ready(function() {
         rowTemplate: function(e) {
             if (JSON.stringify(e.cellsArray)==JSON.stringify(e.labels))
                 return "";
-            var data = e.cellsArray;
-            var datestr = data[0];
-            var presenter = data[1];
-            var topic = data[2];
-            var date = new Date(datestr);
-            if (!will_occur(date))
+            var oneweek = oneweek_from_row(e.cellsArray);
+            if (!will_occur(oneweek.date))
                 return "";
             
             return "<tr>" +
-                   "<td>" + datestr + "</td>" +
-                   "<td>" + presenter + "</td>" +
-                   "<td>" + topic + "</td>" +
+                   "<td>" + oneweek.datestr + "</td>" +
+                   "<td>" + oneweek.presenter + "</td>" +
+                   "<td>" + oneweek.topic + "</td>" +
                    "</tr>";
         }
     });

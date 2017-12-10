@@ -49,14 +49,17 @@ $(document).ready(function() {
         url:jclubtakeaways ,
         query: 'select A,B,C',
         rowTemplate: function(e) {
+            //Skip first row
             if (JSON.stringify(e.cellsArray)==JSON.stringify(e.labels))
                 return "";
             var data = e.cellsArray;
-            var datestr = data[0]
-            var name = data[1];
-            var takeaway = data[2];
-            if (datestr !== thisdate)
+            console.log(data);
+            //Only use this date
+            if (thisdate !== data[0])
                 return "";
+            var datestr = escapeHTML(data[0]);
+            var name = escapeHTML(data[1]);
+            var takeaway = escapeHTML(data[2]);
                 
 
             return "<tr>" +

@@ -66,18 +66,14 @@ $(document).ready(function() {
         rowTemplate: function(e) {
             if (JSON.stringify(e.cellsArray)==JSON.stringify(e.labels))
                 return "";
-            var data = e.cellsArray;
-            var datestr = data[0];
-            var date = new Date(datestr);
-            if (!has_occurred(date))
+            var oneweek = oneweek_from_row(e.cellsArray);
+            if (!has_occurred(oneweek.date))
                 return "";
-            var datehtml = "<a class='date' href=/oneweek.html#" + datestr + ">" + datestr + "</a>";
-            var presenter = data[1];
-            var topic = data[2];
+            var datehtml = "<a class='date' href=/oneweek.html#" + oneweek.datestr + ">" + oneweek.datestr + "</a>";
             return "<tr>" +
                    "<td>" + datehtml + "</td>" +
-                   "<td>" + presenter + "</td>" +
-                   "<td>" + topic + "</td>" +
+                   "<td>" + oneweek.presenter + "</td>" +
+                   "<td>" + oneweek.topic + "</td>" +
                    "</tr>";
         }
     });
@@ -92,8 +88,26 @@ $(document).ready(function() {
       </body>
 <script>
 var jclubsheet = 'https://docs.google.com/spreadsheets/d/1M38X99dQ_rLCaE6mqX9ct2DF-YO6ySAfd3f1_xwerYs/edit#gid=0';
-var jclubtakeaways = 'https://docs.google.com/spreadsheets/d/1MpfQ3BaInYKHI6ebIJEYml1xgfAM0rr5ymmDi6xs8aw/edit#gid=0';
+var jclubtakeaways = 'https://docs.google.com/spreadsheets/d/1sDSIzlP8AJ_2_ZhDGMc6r8aFWcmU84gphIcr49PYTlE/edit#gid=0'
 var NOW = new Date();
+//var jclubtakeaways_id = '1sDSIzlP8AJ_2_ZhDGMc6r8aFWcmU84gphIcr49PYTlE';
+
+var entityMap = {
+  '&': '&amp;',
+  '<': '&lt;',
+  '>': '&gt;',
+  '"': '&quot;',
+  "'": '&#39;',
+  '/': '&#x2F;',
+  '`': '&#x60;',
+  '=': '&#x3D;'
+};
+
+function escapeHTML (string) {
+  return String(string).replace(/[&<>"'`=\/]/g, function (s) {
+    return entityMap[s];
+  });
+}
 
 function get_date_href(date) {
     return "#" + date.replace(/\//g,"-");
@@ -113,7 +127,17 @@ function get_row_from_date(date, callback) {
             var cells = row.cellsArray;
             var rowobj = {};
             for (j in labels) {
-                rowobj[labels[j]] = cells[j];
+                var label = labels[j];
+                var value = cells[j];
+                //I don't want to escape the "/", so I am looking at this one explicitly
+
+                if (label == "Date")  {
+                    if (/^[0-9\/]+$/.test(value)) {
+                        rowobj[label] = value
+                    }
+                } else {
+                    rowobj[label] = escapeHTML(value);
+                }
             }
             if (rowobj["Date"] == date) {
                 callback(rowobj)
@@ -160,6 +184,31 @@ function will_occur(date) {
         return true;
     return NOW < date;
 }
+function submit_takeaway(name, thisdate, takeaway) {
+    
+        gapi.client.sheets.spreadsheets.values.get({
+          spreadsheetId: '1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms',
+          range: 'Class Data!A2:E',
+        }).then(function(response) {
+          var range = response.result;
+          console.log(range);
+        }, function(response) {
+          appendPre('Error: ' + response.result.error.message);
+        });
+}
+
+function oneweek_from_row(row) {
+    var datestr = row[0];
+    //I don't want to escape the "/", so I am looking at this one explicitly
+    if (! /^[0-9\/]+$/.test(datestr))
+        return null;
+    var date = new Date(datestr);
+    var presenter = escapeHTML(row[1]);
+    var topic = escapeHTML(row[2]);
+    return {presenter:presenter, topic: topic, date:date, datestr: datestr}
+}
+
+
 
 
 </script>
