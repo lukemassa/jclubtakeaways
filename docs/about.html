@@ -3,11 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-sheetrock/1.1.4/dist/sheetrock.min.js"></script>
-<script src="/js/lib.js"></script>
+<script src="https://kryogenix.org/code/browser/sorttable/sorttable.js"></script>
 <!--<link rel="stylesheet" href="///Users/luke/jclubtakeaways/docs/css/css.js"></script>-->
 
 <title>JClub Takeaways</title>
@@ -57,4 +58,62 @@
      
      <table id="placeholder" style="display: none;"></table>
       </body>
+<script>
+var jclubsheet = 'https://docs.google.com/spreadsheets/d/1M38X99dQ_rLCaE6mqX9ct2DF-YO6ySAfd3f1_xwerYs/edit#gid=0';
+var jclubtakeaways = 'https://docs.google.com/spreadsheets/d/1MpfQ3BaInYKHI6ebIJEYml1xgfAM0rr5ymmDi6xs8aw/edit#gid=0';
+
+function get_date_href(date) {
+    return "#" + date.replace(/\//g,"-");
+}
+function parse_date_href(date) {
+    return date.split('#')[1].replace(/-/g,"/");
+}
+
+function get_row_from_date(date, callback) {
+   sheetrock({
+      url: jclubsheet,
+      query: 'select A,B,C',
+      callback: function (error, options, response) {
+        console.log(error);
+        for (i in response.rows) {
+            var row = response.rows[i];
+            var labels = row.labels;
+            var cells = row.cellsArray;
+            var rowobj = {};
+            console.log(rowobj);
+            for (j in labels) {
+                rowobj[labels[j]] = cells[j];
+            }
+            if (rowobj["Date"] == date) {
+                callback(rowobj)
+                return;
+            }
+        }
+        callback(null);
+      }
+   });
+}
+function format_date(date) {
+    return (date.getMonth() + 1) + "/" + date.getDate() + "/" + (date.getYear() + 1900);
+}
+function get_last_thursday() {
+    var now = new Date();
+    var day = now.getDay();
+
+    var daysAfterLastThursday;
+    if (day < 4)
+        daysAfterLastThursday = -3 - day;
+    else if (day > 4)
+        daysAfterLastThursday = 4 - day;
+    else 
+        daysAfterLastThursday = 0;
+
+    var currentMs = now.getTime();
+    var lastThursday = new Date(currentMs + (daysAfterLastThursday * 24 * 60 * 60 * 1000));
+    return format_date(lastThursday);
+}
+
+
+
+</script>
     </html>
