@@ -123,8 +123,8 @@ function get_row_from_date(date, callback) {
             for (j in labels) {
                 var label = labels[j];
                 var value = cells[j];
-                //I don't want to escape the "/", so I am looking at this one explicitly
 
+                //I don't want to escape the "/", so I am looking at this one explicitly
                 if (label == "Date")  {
                     if (/^[0-9\/]+$/.test(value)) {
                         rowobj[label] = value
