@@ -27,24 +27,7 @@
 
 $(document).ready(function() {
     var last_thursday = get_last_thursday();
-    get_row_from_date(last_thursday, function(row) {
-
-        if (row["Presenter"]) {
-            var html = "Your takeaway from " + row["Topic"] +
-            " by " + row["Presenter"] +
-            " on " + row["Date"];
-        }
-        else {
-            html = "No Journal Club on " + row["Date"] +
-            " because of " + row["Topic"];
-            $("#takeaway").remove();
-        }
-        $("#header").html(html);
-    });
-    $("#takeaway").submit(function(e) {
-        e.preventDefault();
-        window.location.href = "/oneweek.html#" + last_thursday;
-    });
+    window.location.href = "/submit.html#" + last_thursday;
 });
 </script>
 {% endblock %}

@@ -108,13 +108,11 @@ function get_row_from_date(date, callback) {
       url: jclubsheet,
       query: 'select A,B,C',
       callback: function (error, options, response) {
-        console.log(error);
         for (i in response.rows) {
             var row = response.rows[i];
             var labels = row.labels;
             var cells = row.cellsArray;
             var rowobj = {};
-            console.log(rowobj);
             for (j in labels) {
                 rowobj[labels[j]] = cells[j];
             }

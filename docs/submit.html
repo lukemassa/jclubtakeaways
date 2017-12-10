@@ -59,18 +59,40 @@
         </div>
         <div class="form-group">
             <label for='takeaways'>Takeaways</label>
-            <textarea class="form-control" id="inputName" placeholder="Takeaway"></textarea>
+            <textarea class="form-control" id="inputTakeaway" placeholder="Takeaway"></textarea>
             <small class="form-text text-muted">Write a one or two sentence takeaway or interesting facts from this jclub talk.</small>
         </div>
           <button id="submittakeway" type="submit" class="btn btn-primary">Submit</button>
     </form>
 
 <script>
+var thisdate = window.location.hash.split('#')[1];
 
 
 $(document).ready(function() {
-    var last_thursday = get_last_thursday();
-    window.location.href = "/submit.html#" + last_thursday;
+    get_row_from_date(thisdate, function(row) {
+
+        if (row["Presenter"] && row["Presenter"] != "-") {
+            var html = "Your takeaway from " + row["Topic"] +
+            " by " + row["Presenter"] +
+            " on " + row["Date"];
+        }
+        else {
+            html = "No Journal Club on " + row["Date"] +
+            " because of " + row["Topic"];
+            $("#takeaway").remove();
+        }
+        $("#header").html(html);
+    });
+    $("#takeaway").submit(function(e) {
+        e.preventDefault();
+        var name = $("#inputName").val();
+        var takeaway = $("#inputTakeaway").val();
+        if (name === "" || takeaway === "")
+            alert("Please enter name and a short takeaway");
+        submit_takeaway(name, thisdate, takeaway);
+        window.location.href = "/oneweek.html#" + thisdate;
+    });
 });
 </script>
 

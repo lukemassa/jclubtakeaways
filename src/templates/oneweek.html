@@ -15,38 +15,50 @@
         <th>Takeaway</th>
     </thead>
 </table>
+<button id="entertakeaway" type="submit" class="btn btn-success">Enter takeway</button>
 
 <script>
 
 
 $(document).ready(function() {
-    var hash = window.location.hash.split('#')[1];
-    console.log(hash);
-    get_row_from_date(hash, function(row) {
+    var thisdate = window.location.hash.split('#')[1];
+    $("#entertakeaway").on("click", function() {
+        window.location.href = "/submit.html#" + thisdate;
+    });
+    get_row_from_date(thisdate, function(row) {
 
         var html;
-        if (row["Presenter"]) {
+        if (row["Presenter"] && row["Presenter"] != "-") {
         
             html = "Takeaways from " + row["Topic"] +
             " by " + row["Presenter"] +
             " on " + row["Date"];
         }
         else {
-            html = "No Journal Club on " + row["Date"] +
-            " because of " + row["Topic"];
+            reason = "";
+            if (row["Topic"])
+                reason = " because of " + row["Topic"];
+
+            html = "No Journal Club on " + row["Date"] + reason;
+            $("#oneweek").remove();
+            $("#entertakeaway").remove();
         }
         $("#header").html(html);
     });
     $('#oneweek').sheetrock({
         url:jclubtakeaways ,
-        query: 'select B,C',
+        query: 'select A,B,C',
         rowTemplate: function(e) {
-            console.log(e);
             if (JSON.stringify(e.cellsArray)==JSON.stringify(e.labels))
                 return "";
             var data = e.cellsArray;
-            var name = data[0];
-            var takeaway = data[1];
+            var datestr = data[0]
+            var name = data[1];
+            var takeaway = data[2];
+            if (datestr !== thisdate)
+                return "";
+                
+
             return "<tr>" +
                    "<td>" + name + "</td>" +
                    "<td>" + takeaway + "</td>" +
