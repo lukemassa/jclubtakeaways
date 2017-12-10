@@ -91,7 +91,7 @@ $(document).ready(function() {
         if (name === "" || takeaway === "")
             alert("Please enter name and a short takeaway");
         submit_takeaway(name, thisdate, takeaway);
-        //window.location.href = "/oneweek.html#" + thisdate;
+        window.location.href = "/oneweek.html#" + thisdate;
     });
 });
 </script>
@@ -202,15 +202,7 @@ function will_occur(date) {
 }
 function submit_takeaway(name, thisdate, takeaway) {
     
-        gapi.client.sheets.spreadsheets.values.get({
-          spreadsheetId: '1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms',
-          range: 'Class Data!A2:E',
-        }).then(function(response) {
-          var range = response.result;
-          console.log(range);
-        }, function(response) {
-          appendPre('Error: ' + response.result.error.message);
-        });
+    alert("This is where I would submit!");
 }
 
 function oneweek_from_row(row) {
