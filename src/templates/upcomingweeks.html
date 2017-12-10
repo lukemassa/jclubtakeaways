@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block pageheader %}
-    <h3 id="header">Previous Weeks
+    <h3 id="header">Upcoming Weeks
     </h3>
     {% endblock %}
 
@@ -16,22 +16,23 @@
 <script>
 $(document).ready(function() {
     
+    var start = false;
     $('#weeks').sheetrock({
         url:jclubsheet ,
-        query: "select A,B,C order by A desc",
+        query: "select A,B,C order by A asc",
         rowTemplate: function(e) {
             if (JSON.stringify(e.cellsArray)==JSON.stringify(e.labels))
                 return "";
             var data = e.cellsArray;
             var datestr = data[0];
-            var date = new Date(datestr);
-            if (!has_occurred(date))
-                return "";
-            var datehtml = "<a class='date' href=/oneweek.html#" + datestr + ">" + datestr + "</a>";
             var presenter = data[1];
             var topic = data[2];
+            var date = new Date(datestr);
+            if (!will_occur(date))
+                return "";
+            
             return "<tr>" +
-                   "<td>" + datehtml + "</td>" +
+                   "<td>" + datestr + "</td>" +
                    "<td>" + presenter + "</td>" +
                    "<td>" + topic + "</td>" +
                    "</tr>";

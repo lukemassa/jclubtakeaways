@@ -12,8 +12,6 @@
 
 <title>JClub Takeaways</title>
     
-<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
-
 
 </head>
 <body>
@@ -46,56 +44,43 @@
     <div class="container">
       <div class="page-header">
      
-    <h3 id="header">
+    <h3 id="header">Upcoming Weeks
     </h3>
     
       </div><!-- page-header -->
 
      
-<table id="oneweek" class="table table-condensed table-striped">
+<table id="weeks" class="table table-condensed table-striped">
     <thead>
-        <th>Name</th>
-        <th>Takeaway</th>
+        <th>Date</th>
+        <th>Presenter</th>
+        <th>Topic</th>
     </thead>
 </table>
-
 <script>
-
-
 $(document).ready(function() {
-    var hash = window.location.hash.split('#')[1];
-    console.log(hash);
-    get_row_from_date(hash, function(row) {
-
-        var html;
-        if (row["Presenter"]) {
-        
-            html = "Takeaways from " + row["Topic"] +
-            " by " + row["Presenter"] +
-            " on " + row["Date"];
-        }
-        else {
-            html = "No Journal Club on " + row["Date"] +
-            " because of " + row["Topic"];
-        }
-        $("#header").html(html);
-    });
-    $('#oneweek').sheetrock({
-        url:jclubtakeaways ,
-        query: 'select B,C',
+    
+    var start = false;
+    $('#weeks').sheetrock({
+        url:jclubsheet ,
+        query: "select A,B,C order by A asc",
         rowTemplate: function(e) {
-            console.log(e);
             if (JSON.stringify(e.cellsArray)==JSON.stringify(e.labels))
                 return "";
             var data = e.cellsArray;
-            var name = data[0];
-            var takeaway = data[1];
+            var datestr = data[0];
+            var presenter = data[1];
+            var topic = data[2];
+            var date = new Date(datestr);
+            if (!will_occur(date))
+                return "";
+            
             return "<tr>" +
-                   "<td>" + name + "</td>" +
-                   "<td>" + takeaway + "</td>" +
+                   "<td>" + datestr + "</td>" +
+                   "<td>" + presenter + "</td>" +
+                   "<td>" + topic + "</td>" +
                    "</tr>";
         }
-
     });
 });
 </script>
