@@ -169,8 +169,9 @@ function submit_takeaway(name, thisdate, takeaway, callback) {
         type: 'POST',
         url: url,
         data: JSON.stringify(data),
-        success: function(data, status) { 
-            if (status=== "200") {
+        success: function(data, res, xhr) { 
+            var status = xhr.status;
+            if (status === 200) {
                 callback(true);
             } else {
                 callback(false, "Non-200 from google API: " + JSON.stringify(data));
