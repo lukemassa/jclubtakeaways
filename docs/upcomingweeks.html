@@ -192,7 +192,7 @@ function submit_takeaway(name, thisdate, takeaway, callback) {
         "range" : "Sheet1!A:C",
         "values" : [[thisdate,name,takeaway]]
     }
-    url = "https://sheet.googleapis.com/v4/spreadsheets/" + jclubtakeaways_id + "/values/Sheet1!A:C:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS&access_token=" + oauthtoken;
+    url = "https://sheets.googleapis.com/v4/spreadsheets/" + jclubtakeaways_id + "/values/Sheet1!A:C:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS&access_token=" + oauthtoken;
     $.ajax({
         type: 'POST',
         url: url,
