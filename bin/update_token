@@ -1,0 +1,43 @@
+#!/bin/bash
+
+set -e
+
+defaultpyversion="3"
+
+function usage() {
+    echo "Usage: [--python PYTHONVERSION (e.g. 2.7, 3.5, default $defaultpyversion)] ARGS_FOR_INSPECT_YAML..."
+    exit 1
+}
+
+if [[ "$1" == "--python" ]]
+then
+    if [[ "$#" -eq 1 ]]
+    then
+        usage
+    fi
+    pyversion="$2"
+    shift 2
+fi
+
+if [[ "$pyversion" == "" ]]
+then
+    pyversion=$defaultpyversion
+fi
+
+PYENV_HOME=${WORKSPACE:-`pwd`}/.pyenv/
+
+# Create virtualenv and install necessary packages
+virtualenv -p python${pyversion} --no-site-packages $PYENV_HOME
+. $PYENV_HOME/bin/activate
+
+# Don't write bytecode
+export PYTHONDONTWRITEBYTECODE=1
+
+pip install -r requirements.txt
+
+git pull --ff-only
+token=$(./bin/get_token)
+
+echo "var oauthtoken = '$token'" > docs/token.js
+git commit -m 'Updated oauth token' docs/token.js
+git push origin master

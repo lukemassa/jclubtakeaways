@@ -1,3 +1,4 @@
 
 # have to check in docs/*.html even though they are generated
 # because that's what powers github pages :)
+.pyenv/*

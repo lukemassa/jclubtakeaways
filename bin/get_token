@@ -6,7 +6,7 @@ import jwt
 ALGO='RS256'
 
 def get_token():
-    with open("/Users/luke/creds/webclientaccount.key") as f:
+    with open("/home/lmassa/credentials/jclubtakeaways/webclientaccount.key") as f:
         secret = f.read()
 
     now = int(datetime.now().strftime("%s"))
@@ -30,4 +30,4 @@ def get_token():
 
 
 token = get_token()
-print token
+print(token)
