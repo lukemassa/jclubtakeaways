@@ -35,9 +35,9 @@ export PYTHONDONTWRITEBYTECODE=1
 
 pip install -r requirements.txt
 
-git pull --ff-only
+git pull --ff-only origin master
 token=$(./bin/get_token)
 
-echo "var oauthtoken = '$token'" > docs/token.js
-git commit -m 'Updated oauth token' docs/token.js
+echo "var oauthtoken = '$token'" > docs/oauthtoken.js
+git commit -m 'Updated oauth token' docs/oauthtoken.js
 git push origin master
