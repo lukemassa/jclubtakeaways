@@ -1,0 +1,33 @@
+#!/usr/bin/env python
+import requests
+from datetime import datetime
+import jwt
+
+ALGO='RS256'
+
+def get_token():
+    with open("/Users/luke/creds/webclientaccount.key") as f:
+        secret = f.read()
+
+    now = int(datetime.now().strftime("%s"))
+    then = now + 3000
+    payload = {
+      "iss":"webclientaccount@calm-bliss-188620.iam.gserviceaccount.com",
+      "scope":"https://www.googleapis.com/auth/spreadsheets",
+      "aud":"https://www.googleapis.com/oauth2/v4/token",
+      "exp":then,
+      "iat":now
+    }
+
+    assertion = jwt.encode(payload, secret, ALGO)
+    body = {
+            "grant_type" : "urn:ietf:params:oauth:grant-type:jwt-bearer",
+            "assertion" : assertion
+            }
+
+    r = requests.post("https://www.googleapis.com/oauth2/v4/token", data=body).json()
+    return r["access_token"]
+
+
+token = get_token()
+print token
