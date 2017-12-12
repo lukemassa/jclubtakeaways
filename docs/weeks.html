@@ -8,6 +8,7 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-sheetrock/1.1.4/dist/sheetrock.min.js"></script>
+<script src="/oauthtoken.js"></script>
 <!--<link rel="stylesheet" href="///Users/luke/jclubtakeaways/docs/css/css.js"></script>-->
 
 <title>JClub Takeaways</title>
@@ -88,7 +89,8 @@ $(document).ready(function() {
       </body>
 <script>
 var jclubsheet = 'https://docs.google.com/spreadsheets/d/1M38X99dQ_rLCaE6mqX9ct2DF-YO6ySAfd3f1_xwerYs/edit#gid=0';
-var jclubtakeaways = 'https://docs.google.com/spreadsheets/d/1sDSIzlP8AJ_2_ZhDGMc6r8aFWcmU84gphIcr49PYTlE/edit#gid=0'
+var jclubtakeaways_id = '1sDSIzlP8AJ_2_ZhDGMc6r8aFWcmU84gphIcr49PYTlE';
+var jclubtakeaways = 'https://docs.google.com/spreadsheets/d/' + jclubtakeaways_id + '/edit#gid=0';
 var NOW = new Date();
 
 var entityMap = {
@@ -183,9 +185,30 @@ function will_occur(date) {
         return true;
     return NOW < date;
 }
-function submit_takeaway(name, thisdate, takeaway) {
+function submit_takeaway(name, thisdate, takeaway, callback) {
     
-    alert("This is where I would submit!");
+    data = {
+        "range" : "Sheet1!A:C",
+        "values" : [[thisdate,name,takeaway]]
+    }
+    url = "https://sheet.googleapis.com/v4/spreadsheets/" + jclubtakeaways_id + "/values/Sheet1!A:C:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS&access_token=" + oauthtoken;
+    $.ajax({
+        type: 'POST',
+        url: url,
+        data: JSON.stringify(data),
+        success: function(data, status) { 
+            if (status=== "200") {
+                callback(true);
+            } else {
+                callback(false, data);
+            }
+            },
+        error: function(data) {
+            callback(false, data);
+        },
+        contentType: "application/json",
+        dataType: 'json'
+    });
 }
 
 function oneweek_from_row(row) {
