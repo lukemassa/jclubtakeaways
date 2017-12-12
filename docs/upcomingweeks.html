@@ -201,11 +201,11 @@ function submit_takeaway(name, thisdate, takeaway, callback) {
             if (status=== "200") {
                 callback(true);
             } else {
-                callback(false, data);
+                callback(false, "Non-200 from google API: " + JSON.stringify(data));
             }
             },
-        error: function(data) {
-            callback(false, data);
+        error: function(jqXHR, data) {
+            callback(false, "AJAX call failed: " + JSON.stringify(jqXHR));
         },
         contentType: "application/json",
         dataType: 'json'
