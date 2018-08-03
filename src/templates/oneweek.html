@@ -36,7 +36,7 @@ $(document).ready(function() {
         }
         else {
             reason = "";
-            if (row["Topic"])
+            if (row["Topic"] && row["Topic"] !== "")
                 reason = " because of " + row["Topic"];
 
             html = "No Journal Club on " + row["Date"] + reason;
@@ -60,6 +60,7 @@ $(document).ready(function() {
             var datestr = escapeHTML(data[0]);
             var name = escapeHTML(data[1]);
             var takeaway = escapeHTML(data[2]);
+            takeaway = takeaway.replace("\n", "<br>");
                 
 
             return "<tr>" +
