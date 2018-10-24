@@ -79,8 +79,10 @@ $(document).ready(function() {
             " on " + row["Date"];
         }
         else {
-            html = "No Journal Club on " + row["Date"] +
-            " because of " + row["Topic"];
+            html = "No Journal Club on " + row["Date"];
+            var reason = row["Topic"];
+            if (reason)
+                html = html + " because of " + reason;
             $("#takeaway").remove();
         }
         $("#header").html(html);
