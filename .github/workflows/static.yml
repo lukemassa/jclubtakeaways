@@ -32,7 +32,7 @@ jobs:
         if: github.repository == 'lukemassa/jclubtakeaways-gui-dev' && github.ref_name != 'development'
         run: exit 1
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - uses: actions/setup-go@v5
         with:
           go-version-file: 'go.mod'
@@ -40,12 +40,12 @@ jobs:
       - run: make development
         if: github.repository == 'lukemassa/jclubtakeaways-gui-dev'
       - name: Setup Pages
-        uses: actions/configure-pages@v2
+        uses: actions/configure-pages@v5
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
+        uses: actions/upload-pages-artifact@v4
         with:
           # Upload entire repository
           path: 'docs'
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v1
+        uses: actions/deploy-pages@v4
