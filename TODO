@@ -1,10 +1,12 @@
 - Merge all code into one repo (this one, since it has the github pages)
    - dev-gui is over-engineered, we don't need that
-   - Not sure which one currently deploys to heroku, but let's make that deploy to Amazon instead, better understood
-   - -web is unnecessary, bring that back home here
-   - -api no idea what's up there
-- Move the token generation into 
-- Figure out what's on AWS
+   - -api is currently running in heroku
+- Deploy the API to AWS
+   - Let's do
+      - terraform to create lambda, invoke via HTTP
+      - github action to build code and update lambda
+   - https://chatgpt.com/c/69e5472f-fce0-83ea-a436-1350d3099582
 - Get rid of heroku from the process, make that API on AWS
-- More fully separate the API from the UI
+- Fully remove the dev version
+- Implement submit in the API
 - Archive other repos
