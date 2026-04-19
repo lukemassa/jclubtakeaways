@@ -1,4 +1,4 @@
-package main
+package templater
 
 import (
 	"errors"
@@ -15,7 +15,7 @@ type Templater struct {
 	srcDir string
 }
 
-func NewTemplater(srcDir string) Templater {
+func New(srcDir string) Templater {
 	return Templater{
 		srcDir: srcDir,
 	}
@@ -80,6 +80,7 @@ func (t Templater) Write(dir string) error {
 
 	return nil
 }
+
 func (t Templater) getTemplateFromURL(url string) (*template.Template, error) {
 
 	if !strings.HasSuffix(url, ".html") {
@@ -116,25 +117,5 @@ func (t Templater) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	err = tmpl.Execute(w, nil)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
-	}
-}
-
-func main() {
-
-	t := NewTemplater("src/templates")
-	if len(os.Args) > 1 {
-		if os.Args[1] == "--server" {
-			http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-				http.Redirect(w, r, "/index.html", http.StatusMovedPermanently)
-			})
-			http.Handle("/{page}", t)
-			log.Print("Listening on :8080")
-			log.Fatal(http.ListenAndServe(":8080", nil))
-		}
-		log.Fatal("Usage: [--server]")
-	}
-	err := t.Write("docs")
-	if err != nil {
-		log.Fatal(err)
 	}
 }

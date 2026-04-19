@@ -36,7 +36,7 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version-file: 'go.mod'
-      - run: make
+      - run: go run cmd/templates/main.go
       - run: make development
         if: github.repository == 'lukemassa/jclubtakeaways-gui-dev'
       - name: Setup Pages
