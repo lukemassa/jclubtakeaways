@@ -1,3 +1,9 @@
-- Merge GUI and api into one app deployed from heroku
-
-See https://github.com/lukemassa/jclubtakeaways-web
+- Merge all code into one repo (this one, since it has the github pages)
+   - dev-gui is over-engineered, we don't need that
+   - Not sure which one currently deploys to heroku, but let's make that deploy to Amazon instead, better understood
+   - -web is unnecessary, bring that back home here
+   - -api no idea what's up there
+- Figure out what's on AWS
+- Get rid of heroku from the process, make that API on AWS
+- More fully separate the API from the UI
+- Archive other repos
