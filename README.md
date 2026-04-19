@@ -4,7 +4,7 @@
 
 ### Production
 
-This repo is located in https://github.com/lukemassa/jclubtakeaways-gui. A github action builds the page into docs/, uploads as an artifact and deploys to github pages (https://github.com/lukemassa/jclubtakeaways-gui/settings/pages).
+This repo is located in https://github.com/lukemassa/jclubtakeaways. A github action builds the page into docs/, uploads as an artifact and deploys to github pages (https://github.com/lukemassa/jclubtakeaways/settings/pages).
 
 The page is then visible at https://jclubtakeaways.com
 
@@ -20,7 +20,7 @@ High level, submit PRs/merge directly to "development" to develop, then merge de
 
 ### Propose a change
 
-1. Go to the development branch in git (https://github.com/lukemassa/jclubtakeaways-gui/tree/development)
+1. Go to the development branch in git (https://github.com/lukemassa/jclubtakeaways/tree/development)
 2. Create a PR with target branch "development"
 3. Have Luke review and merge
 4. Visit https://development.d7s2t12hepi6g.amplifyapp.com to view change (should be live in a few minutes)
