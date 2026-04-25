@@ -1,0 +1,37 @@
+name: deploy-lambda
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.22"
+
+      - name: Build
+        run: |
+          GOOS=linux GOARCH=arm64 go build -o bootstrap ./cmd/lambda/hello-world
+          zip function.zip bootstrap
+
+      - name: Configure AWS
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::917497682277:role/github-actions-lambda-deploy
+          aws-region: us-east-1
+
+      - name: Deploy
+        run: |
+          aws lambda update-function-code \
+            --function-name token-minter \
+            --zip-file fileb://function.zip
