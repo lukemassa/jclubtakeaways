@@ -72,7 +72,7 @@ func getTokener() (*token.Tokener, error) {
 	return globalTokener, nil
 }
 
-func handler(ctx context.Context, req events.LambdaFunctionURLRequest) Response {
+func handler(ctx context.Context, req events.LambdaFunctionURLRequest) (Response, error) {
 
 	tokener, err := getTokener()
 	if err != nil {
@@ -80,11 +80,11 @@ func handler(ctx context.Context, req events.LambdaFunctionURLRequest) Response 
 			Token: "",
 			Error: err.Error(),
 		}
-	}
+	}, nil
 	return Response{
 		Token: tokener.Get(),
 		Error: "",
-	}
+	}, nil
 }
 
 func main() {
