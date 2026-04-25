@@ -79,8 +79,8 @@ func handler(ctx context.Context, req events.LambdaFunctionURLRequest) (Response
 		return Response{
 			Token: "",
 			Error: err.Error(),
-		}
-	}, nil
+		}, nil
+	}
 	return Response{
 		Token: tokener.Get(),
 		Error: "",
