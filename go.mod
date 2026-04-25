@@ -3,6 +3,7 @@ module github.com/lukemassa/jclubtakeaways
 go 1.24.3
 
 require (
+	github.com/aws/aws-lambda-go v1.54.0
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/jessevdk/go-flags v1.6.1
 	github.com/lukemassa/clilog v0.1.2
