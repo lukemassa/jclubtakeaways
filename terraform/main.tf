@@ -13,6 +13,31 @@ resource "aws_iam_role" "token_minter" {
   })
 }
 
+resource "aws_ssm_parameter" "webclientaccount_key" {
+  name  = "/token-minter/webclientaccount_key"
+  type  = "SecureString"
+  value = "placeholder"
+
+  lifecycle {
+    ignore_changes = [value]
+  }
+}
+
+resource "aws_iam_role_policy" "webclientaccount_key_access" {
+  role = aws_iam_role.token_minter.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect = "Allow"
+      Action = [
+        "ssm:GetParameter"
+      ]
+      Resource = aws_ssm_parameter.webclientaccount_key.arn
+    }]
+  })
+}
+
 resource "aws_iam_role_policy_attachment" "token_minter_attachment" {
   role       = aws_iam_role.token_minter.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
