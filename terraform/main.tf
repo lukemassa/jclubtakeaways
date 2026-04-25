@@ -72,4 +72,10 @@ resource "aws_lambda_function" "token_minter" {
 resource "aws_lambda_function_url" "token_minter" {
   function_name      = aws_lambda_function.token_minter.function_name
   authorization_type = "NONE"
+
+  cors {
+    allow_origins = ["https://jclubtakeaways.com"]
+    allow_methods = ["GET"]
+    allow_headers = ["*"]
+  }
 }
