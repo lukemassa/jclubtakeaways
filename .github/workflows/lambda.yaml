@@ -21,7 +21,7 @@ jobs:
 
       - name: Build
         run: |
-          GOOS=linux GOARCH=arm64 go build -o bootstrap ./cmd/lambda/hello-world
+          GOOS=linux GOARCH=arm64 go build -o bootstrap ./cmd/lambda/token-minter
           zip function.zip bootstrap
 
       - name: Configure AWS
