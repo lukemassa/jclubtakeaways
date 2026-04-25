@@ -55,17 +55,18 @@ resource "aws_lambda_function" "token_minter" {
   filename         = "placeholder.zip"
   source_code_hash = filebase64sha256("placeholder.zip")
 
+  environment {
+    variables = {
+      SECRET_PARAM = aws_ssm_parameter.webclientaccount_key.name
+    }
+  }
+
   lifecycle {
     ignore_changes = [
       filename,
       source_code_hash,
     ]
   }
-}
-
-moved {
-  from = aws_lambda_function.token-minter
-  to = aws_lambda_function.token_minter
 }
 
 resource "aws_lambda_function_url" "token_minter" {

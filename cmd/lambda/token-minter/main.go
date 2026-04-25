@@ -16,6 +16,10 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/ssm"
 )
 
+var (
+	globalTokener *token.Tokener
+)
+
 type Response struct {
 	Token string `json:"token"`
 	Error string `json:"error"`
@@ -47,20 +51,31 @@ func getSecretKey() (string, error) {
 	if out.Parameter == nil || out.Parameter.Value == nil {
 		return "", fmt.Errorf("SSM parameter returned empty value")
 	}
+	return "", errors.New("oh hi I'm an error")
 
 	return *out.Parameter.Value, nil
 }
 
-func handler(ctx context.Context, req events.LambdaFunctionURLRequest) (events.LambdaFunctionURLResponse, error) {
+func getTokener() (*token.Tokener, error) {
+	if globalTokener != nil {
+		return globalTokener, nil
+	}
 
 	secretKey, err := getSecretKey()
 	if err != nil {
-		return events.LambdaFunctionURLResponse{
-			StatusCode: 500,
-			Body:       fmt.Sprintf("internal error: %v", err),
-		}, nil
+		return nil, err
 	}
 	tokener, err := token.New(secretKey)
+	if err != nil {
+		return nil, err
+	}
+	globalTokener = &tokener
+	return globalTokener, nil
+}
+
+func handler(ctx context.Context, req events.LambdaFunctionURLRequest) (events.LambdaFunctionURLResponse, error) {
+
+	tokener, err := getTokener()
 	if err != nil {
 		return events.LambdaFunctionURLResponse{
 			StatusCode: 500,
