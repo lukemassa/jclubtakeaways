@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"os"
@@ -73,33 +72,19 @@ func getTokener() (*token.Tokener, error) {
 	return globalTokener, nil
 }
 
-func handler(ctx context.Context, req events.LambdaFunctionURLRequest) (events.LambdaFunctionURLResponse, error) {
+func handler(ctx context.Context, req events.LambdaFunctionURLRequest) Response {
 
 	tokener, err := getTokener()
 	if err != nil {
-		return events.LambdaFunctionURLResponse{
-			StatusCode: 500,
-			Body:       fmt.Sprintf("internal error: %v", err),
-		}, nil
+		return Response{
+			Token: "",
+			Error: err.Error(),
+		}
 	}
-	body, err := json.Marshal(Response{
+	return Response{
 		Token: tokener.Get(),
 		Error: "",
-	})
-	if err != nil {
-		return events.LambdaFunctionURLResponse{
-			StatusCode: 500,
-			Body:       "internal error",
-		}, nil
 	}
-
-	return events.LambdaFunctionURLResponse{
-		StatusCode: 200,
-		Headers: map[string]string{
-			"Content-Type": "application/json",
-		},
-		Body: string(body),
-	}, nil
 }
 
 func main() {
