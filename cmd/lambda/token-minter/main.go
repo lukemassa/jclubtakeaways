@@ -50,7 +50,6 @@ func getSecretKey() (string, error) {
 	if out.Parameter == nil || out.Parameter.Value == nil {
 		return "", fmt.Errorf("SSM parameter returned empty value")
 	}
-	return "", errors.New("oh hi I'm an error")
 
 	return *out.Parameter.Value, nil
 }
