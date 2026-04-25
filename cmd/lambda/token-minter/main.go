@@ -3,9 +3,17 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"errors"
+	"fmt"
+	"os"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
+	"github.com/lukemassa/jclubtakeaways/internal/token"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/service/ssm"
 )
 
 type Response struct {
@@ -13,11 +21,54 @@ type Response struct {
 	Error string `json:"error"`
 }
 
+func getSecretKey() (string, error) {
+	ctx := context.Background()
+
+	paramName := os.Getenv("SECRET_PARAM")
+	if paramName == "" {
+		return "", errors.New("SECRET_PARAM not set")
+	}
+
+	cfg, err := config.LoadDefaultConfig(ctx)
+	if err != nil {
+		return "", fmt.Errorf("failed to load AWS config: %v", err)
+	}
+
+	client := ssm.NewFromConfig(cfg)
+
+	out, err := client.GetParameter(ctx, &ssm.GetParameterInput{
+		Name:           aws.String(paramName),
+		WithDecryption: aws.Bool(true),
+	})
+	if err != nil {
+		return "", fmt.Errorf("failed to fetch secret from SSM: %v", err)
+	}
+
+	if out.Parameter == nil || out.Parameter.Value == nil {
+		return "", fmt.Errorf("SSM parameter returned empty value")
+	}
+
+	return *out.Parameter.Value, nil
+}
+
 func handler(ctx context.Context, req events.LambdaFunctionURLRequest) (events.LambdaFunctionURLResponse, error) {
-	//tokener := token.New()
-	//token := tokener.Get()
+
+	secretKey, err := getSecretKey()
+	if err != nil {
+		return events.LambdaFunctionURLResponse{
+			StatusCode: 500,
+			Body:       fmt.Sprintf("internal error: %v", err),
+		}, nil
+	}
+	tokener, err := token.New(secretKey)
+	if err != nil {
+		return events.LambdaFunctionURLResponse{
+			StatusCode: 500,
+			Body:       fmt.Sprintf("internal error: %v", err),
+		}, nil
+	}
 	body, err := json.Marshal(Response{
-		Token: "this is a token",
+		Token: tokener.Get(),
 		Error: "",
 	})
 	if err != nil {

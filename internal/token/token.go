@@ -3,42 +3,34 @@ package token
 import (
 	"bytes"
 	"crypto/rsa"
-	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
-	"os"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
 )
 
-type Tokener struct{}
+type Tokener struct {
+	secretKey *rsa.PrivateKey
+}
 
-func New() Tokener {
-	return Tokener{}
+func New(rawSecretKey string) (Tokener, error) {
+	secretKey, err := jwt.ParseRSAPrivateKeyFromPEM([]byte(rawSecretKey))
+	if err != nil {
+		return Tokener{}, err
+	}
+	return Tokener{
+		secretKey: secretKey,
+	}, nil
 }
 
 type tokenResponse struct {
 	AccessToken string `json:"access_token"`
 }
 
-func getKey() (*rsa.PrivateKey, error) {
-	content := os.Getenv("WEB_CLIENT_KEY")
-
-	decoded, err := base64.StdEncoding.DecodeString(content)
-	if err != nil {
-		return nil, err
-	}
-	return jwt.ParseRSAPrivateKeyFromPEM(decoded)
-}
-
-func getAssertion() (string, error) {
-	key, err := getKey()
-	if err != nil {
-		return "", err
-	}
+func (t Tokener) getAssertion() (string, error) {
 	alg := jwt.GetSigningMethod("RS256")
 	tok := jwt.New(alg)
 	start := time.Now()
@@ -50,7 +42,7 @@ func getAssertion() (string, error) {
 		"iss":   "webclientaccount@calm-bliss-188620.iam.gserviceaccount.com",
 		"iat":   start.Unix(),
 	}
-	return tok.SignedString(key)
+	return tok.SignedString(t.secretKey)
 }
 
 func getTokenFromAPI(assertion string) (string, error) {
@@ -85,7 +77,7 @@ func getTokenFromAPI(assertion string) (string, error) {
 // GetToken get a token
 func (t Tokener) Get() string {
 
-	assertion, err := getAssertion()
+	assertion, err := t.getAssertion()
 	if err != nil {
 		return fmt.Sprintf("Error generating assertion: %v", err)
 	}
