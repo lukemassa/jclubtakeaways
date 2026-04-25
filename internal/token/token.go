@@ -75,24 +75,27 @@ func getTokenFromAPI(assertion string) (string, error) {
 }
 
 // GetToken get a token
-func (t Tokener) Get() string {
+func (t Tokener) Get() (string, error) {
 
 	assertion, err := t.getAssertion()
 	if err != nil {
-		return fmt.Sprintf("Error generating assertion: %v", err)
+		return "", fmt.Errorf("generating assertion: %v", err)
 	}
 
 	token, err := getTokenFromAPI(assertion)
 	if err != nil {
-		return fmt.Sprintf("Error calling API: %v", err)
+		return "", fmt.Errorf("calling API: %v", err)
 	}
 
-	return token
+	return token, nil
 }
 
 func (t Tokener) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	tok := t.Get()
+	tok, err := t.Get()
 	res := fmt.Sprintf("{\"token\":\"%s\",\"error\":\"\"}", tok)
+	if err != nil {
+		res = fmt.Sprintf("{\"token\":\"\",\"error\":\"%s\"}", err.Error())
+	}
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	fmt.Fprint(w, res)
 }
