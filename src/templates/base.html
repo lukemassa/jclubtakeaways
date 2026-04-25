@@ -91,9 +91,10 @@ function parse_date_href(date) {
 
 
 function getToken() {
+  console.log("Token requested")
   if (!tokenPromise) {
     tokenPromise = new Promise((resolve, reject) => {
-        console.log("I am making a call to get the token")
+        console.log("I am making a call to actually get the token")
       $.ajax({
         dataType: 'json',
         //url: "/api/token",
@@ -283,7 +284,6 @@ $(window).on('load', function() {
 		$("#navbar-right").html(content);
        }
    });
-   getToken()
 });
 </script>
     </html>

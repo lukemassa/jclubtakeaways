@@ -26,7 +26,13 @@
 var thisdate = window.location.hash.split('#')[1];
 
 
+
+
 $(document).ready(function() {
+    // Once user starts typing in the takeaway, there's a good chance they will type a takeaway, so grab the token
+    const opts = { once: true };
+    document.getElementById("inputTakeaway").addEventListener("input", getToken, opts);
+
     get_row_from_date(thisdate, function(row) {
 
         if (row["Presenter"] && row["Presenter"] != "-") {
