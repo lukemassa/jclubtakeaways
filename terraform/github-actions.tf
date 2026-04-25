@@ -31,7 +31,8 @@ resource "aws_iam_role_policy" "lambda_deploy" {
     Statement = [{
       Effect = "Allow"
       Action = [
-        "lambda:UpdateFunctionCode"
+        "lambda:UpdateFunctionCode",
+        "lambda:GetFunction"
       ]
       Resource = aws_lambda_function.token_minter.arn
     }]

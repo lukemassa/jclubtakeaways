@@ -7,7 +7,7 @@ import (
 )
 
 func handler(ctx context.Context) (string, error) {
-  return "hello from lambda", nil
+  return "hello from lambda, but with CI!", nil
 }
 
 func main() {
