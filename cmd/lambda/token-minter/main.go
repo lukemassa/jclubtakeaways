@@ -24,9 +24,7 @@ type Response struct {
 	Error string `json:"error"`
 }
 
-func getSecretKey() (string, error) {
-	ctx := context.Background()
-
+func getSecretKey(ctx context.Context) (string, error) {
 	paramName := os.Getenv("SECRET_PARAM")
 	if paramName == "" {
 		return "", errors.New("SECRET_PARAM not set")
@@ -34,7 +32,7 @@ func getSecretKey() (string, error) {
 
 	cfg, err := config.LoadDefaultConfig(ctx)
 	if err != nil {
-		return "", fmt.Errorf("failed to load AWS config: %v", err)
+		return "", fmt.Errorf("failed to load AWS config: %w", err)
 	}
 
 	client := ssm.NewFromConfig(cfg)
@@ -44,7 +42,7 @@ func getSecretKey() (string, error) {
 		WithDecryption: aws.Bool(true),
 	})
 	if err != nil {
-		return "", fmt.Errorf("failed to fetch secret from SSM: %v", err)
+		return "", fmt.Errorf("failed to fetch secret from SSM: %w", err)
 	}
 
 	if out.Parameter == nil || out.Parameter.Value == nil {
@@ -54,12 +52,12 @@ func getSecretKey() (string, error) {
 	return *out.Parameter.Value, nil
 }
 
-func getTokener() (*token.Tokener, error) {
+func getTokener(ctx context.Context) (*token.Tokener, error) {
 	if globalTokener != nil {
 		return globalTokener, nil
 	}
 
-	secretKey, err := getSecretKey()
+	secretKey, err := getSecretKey(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -73,23 +71,20 @@ func getTokener() (*token.Tokener, error) {
 
 func handler(ctx context.Context, req events.LambdaFunctionURLRequest) (Response, error) {
 
-	tokener, err := getTokener()
+	tokener, err := getTokener(ctx)
 	if err != nil {
 		return Response{
-			Token: "",
 			Error: err.Error(),
 		}, nil
 	}
 	token, err := tokener.Get()
 	if err != nil {
 		return Response{
-			Token: "",
 			Error: err.Error(),
 		}, nil
 	}
 	return Response{
 		Token: token,
-		Error: "",
 	}, nil
 }
 
