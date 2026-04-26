@@ -28,17 +28,12 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Fail if incorrect branch
-        if: github.repository == 'lukemassa/jclubtakeaways-gui-dev' && github.ref_name != 'development'
-        run: exit 1
       - name: Checkout
         uses: actions/checkout@v4
       - uses: actions/setup-go@v5
         with:
           go-version-file: 'go.mod'
       - run: go run cmd/templates/main.go
-      - run: make development
-        if: github.repository == 'lukemassa/jclubtakeaways-gui-dev'
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact

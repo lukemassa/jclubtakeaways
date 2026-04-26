@@ -1,8 +1,4 @@
-- Merge all code into one repo (this one, since it has the github pages)
-   - dev-gui is over-engineered, we don't need that
-   - -api is currently running in heroku
 - Decommission heroku
    - Probably get rid of docker/, delete heroku account, and -api repo
-- Fully remove the dev version
 - Implement submit in the API
-- Archive other repos
+- Finish docs
