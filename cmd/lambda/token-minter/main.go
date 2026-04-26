@@ -25,9 +25,9 @@ type Response struct {
 }
 
 func getSecretKey(ctx context.Context) (string, error) {
-	paramName := os.Getenv("SECRET_PARAM")
-	if paramName == "" {
-		return "", errors.New("SECRET_PARAM not set")
+	ssmParameterARN := os.Getenv("WEB_CLIENT_KEY_ARN")
+	if ssmParameterARN == "" {
+		return "", errors.New("WEB_CLIENT_KEY_ARN not set")
 	}
 
 	cfg, err := config.LoadDefaultConfig(ctx)
@@ -38,7 +38,7 @@ func getSecretKey(ctx context.Context) (string, error) {
 	client := ssm.NewFromConfig(cfg)
 
 	out, err := client.GetParameter(ctx, &ssm.GetParameterInput{
-		Name:           aws.String(paramName),
+		Name:           aws.String(ssmParameterARN),
 		WithDecryption: aws.Bool(true),
 	})
 	if err != nil {

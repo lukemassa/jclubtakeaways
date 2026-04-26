@@ -57,7 +57,7 @@ resource "aws_lambda_function" "token_minter" {
 
   environment {
     variables = {
-      SECRET_PARAM = aws_ssm_parameter.webclientaccount_key.name
+      WEB_CLIENT_KEY_ARN = aws_ssm_parameter.webclientaccount_key.arn
     }
   }
 
