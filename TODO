@@ -1,4 +1,0 @@
-- Decommission heroku
-   - Probably get rid of docker/, delete heroku account, and -api repo
-- Implement submit in the API
-- Finish docs
