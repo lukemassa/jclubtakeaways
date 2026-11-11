@@ -52,8 +52,7 @@ resource "aws_lambda_function" "token_minter" {
 
   architectures = ["arm64"]
 
-  filename         = "placeholder.zip"
-  source_code_hash = filebase64sha256("placeholder.zip")
+  filename = "${path.module}/placeholder.zip"
 
   environment {
     variables = {
