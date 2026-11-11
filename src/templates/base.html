@@ -212,7 +212,8 @@ function log_alert(alertType, msg) {
     if (alertType === "danger") {
         msg = "An error occurred, please reach out to Luke with this message: " + msg
     }
-    $("#alerts").append("<div class='alert alert-" + alertType + "' role='alert'>" + msg + "</div>")
+    const alertClass = alertType === "success" ? "alert-success" : "alert-danger";
+    $("#alerts").append($("<div>").addClass("alert " + alertClass).attr("role", "alert").text(msg));
 }
 
 function finishFunc(msg) {
@@ -241,7 +242,7 @@ function append_entry(range, values, success) {
               "range" : range,
               "values" : [values]
           }
-          url = "https://sheets.googleapis.com/v4/spreadsheets/" + jclubtakeaways_id + "/values/" + range + ":append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS&access_token=" + oauthtoken;
+          const url = "https://sheets.googleapis.com/v4/spreadsheets/" + jclubtakeaways_id + "/values/" + range + ":append?valueInputOption=RAW&insertDataOption=INSERT_ROWS&access_token=" + oauthtoken;
           $.ajax({
                 type: 'POST',
                 url: url,

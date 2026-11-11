@@ -14,9 +14,7 @@ resource "aws_iam_role" "github_actions" {
       Condition = {
         StringEquals = {
           "token.actions.githubusercontent.com:aud" = "sts.amazonaws.com"
-        }
-        StringLike = {
-          "token.actions.githubusercontent.com:sub" = "repo:lukemassa/jclubtakeaways:ref:refs/heads/main"
+          "token.actions.githubusercontent.com:sub" = "repo:lukemassa/jclubtakeaways:environment:lambda-production"
         }
       }
     }]

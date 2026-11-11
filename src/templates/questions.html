@@ -72,7 +72,7 @@ $(document).ready(function() {
     get_topics(function(topics) {
         var topicsElement =  $("#inputTopic")
         for (const topic of topics) {
-            topicsElement.append("<option>" + topic + "</option>")
+            topicsElement.append($("<option>").val(topic).text(topic));
         }
     });
     $("#question").submit(function(e) {
